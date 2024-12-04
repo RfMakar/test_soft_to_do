@@ -37,13 +37,19 @@ class SqfliteClientApp {
     return await db.rawQuery(sql);
   }
 
-  Future<int> createTask(String text) async {
+  Future<List<Map<String, dynamic>>> createTask(String text) async {
     final db = await _getDataBase;
-    final sql = '''
+    final sqlCreate = '''
     INSERT INTO todolist (name, selected) 
     VALUES ('$text', 0);
     ''';
-    return await db.rawInsert(sql);
+    final int idRow = await db.rawInsert(sqlCreate);
+    final sqlQuery = '''
+    SELECT *
+    FROM todolist
+    WHERE id = $idRow
+    ''';
+    return await db.rawQuery(sqlQuery);
   }
 
   Future<int> deleteTask(int id) async {
@@ -55,13 +61,19 @@ class SqfliteClientApp {
     return await db.rawDelete(sql);
   }
 
-  Future<int> updateTask(int id, int select) async {
+  Future<List<Map<String, dynamic>>> updateTask(int id, int select) async {
     final db = await _getDataBase;
-    const sql = '''
+    const sqlUpdate = '''
     UPDATE todolist
     SET selected = ?
     WHERE id = ?;
     ''';
-    return await db.rawUpdate(sql, [select, id]);
+    await db.rawUpdate(sqlUpdate, [select, id]);
+    final sqlQuery = '''
+    SELECT *
+    FROM todolist
+    WHERE id = $id
+    ''';
+    return await db.rawQuery(sqlQuery);
   }
 }

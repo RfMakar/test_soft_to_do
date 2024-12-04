@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:test_soft_to_do/data/data_soures/sqflite.dart';
 import 'package:test_soft_to_do/data/repositories_impl/to_do_imp.dart';
 import 'package:test_soft_to_do/domain/repositories/to_do.dart';
-import 'package:test_soft_to_do/domain/state/home_store.dart';
+import 'package:test_soft_to_do/presentation/screens/bloc/home_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -17,10 +17,6 @@ Future<void> setupDependencies() async {
       sqfliteClientApp: sl(),
     ),
   );
-  //stores screen
-  sl.registerLazySingleton<HomeStore>(
-    () => HomeStore(
-      toDoRepository: sl(),
-    )..init(),
-  );
+  //bloc screen
+  sl.registerFactory(() => HomeBloc(sl()));
 }

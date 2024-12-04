@@ -18,20 +18,24 @@ class ToDoRepositoryImpl implements ToDoRepository {
   }
 
   @override
-  Future<bool> createTask({required String text}) async {
+  Future<TaskModel?> createTask({required String text}) async {
     final data = await _sqfliteClientApp.createTask(text);
-    return data > 0 ? true : false;
+    return data.isNotEmpty
+        ? data.map((e) => TaskModel.fromJson(e)).toList().first
+        : null;
   }
 
   @override
-  Future<bool> deleteTask({required int idTask}) async {
+  Future<int> deleteTask({required int idTask}) async {
     final data = await _sqfliteClientApp.deleteTask(idTask);
-    return data > 0 ? true : false;
+    return data;
   }
 
   @override
-  Future<bool> updateTask({required int idTask, required int select}) async {
+  Future<TaskModel?> updateTask({required int idTask, required int select}) async {
     final data = await _sqfliteClientApp.updateTask(idTask, select);
-    return data > 0 ? true : false;
+    return data.isNotEmpty
+        ? data.map((e) => TaskModel.fromJson(e)).toList().first
+        : null;
   }
 }
